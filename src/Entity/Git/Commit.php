@@ -50,7 +50,7 @@ class Commit
      */
     public function getRepositoryName(): string
     {
-        $repository = (string)preg_replace('/\.git$/', '', $this->repository->url);
+        $repository = (string)preg_replace('/\.git$/', '', (string)$this->repository->getUrl());
 
         return basename($repository);
     }

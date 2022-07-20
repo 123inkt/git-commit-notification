@@ -3,11 +3,14 @@ declare(strict_types=1);
 
 namespace DR\GitCommitNotification\Tests\Unit\Service\Mail;
 
+use DateTime;
 use DR\GitCommitNotification\Entity\Config\Recipient;
-use DR\GitCommitNotification\Entity\Config\Recipients;
 use DR\GitCommitNotification\Entity\Config\Rule;
+use DR\GitCommitNotification\Entity\Config\RuleConfiguration;
+use DR\GitCommitNotification\Entity\Config\RuleOptions;
 use DR\GitCommitNotification\Service\Mail\MailService;
-use DR\GitCommitNotification\Tests\AbstractTest;
+use DR\GitCommitNotification\Service\Mail\MailSubjectFormatter;
+use DR\GitCommitNotification\Tests\AbstractTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -17,26 +20,29 @@ use Symfony\Component\Mailer\MailerInterface;
  * @coversDefaultClass \DR\GitCommitNotification\Service\Mail\MailService
  * @covers ::__construct
  */
-class MailServiceTest extends AbstractTest
+class MailServiceTest extends AbstractTestCase
 {
-    /** @var MockObject|MailerInterface */
+    /** @var MockObject&MailerInterface */
     private MailerInterface $mailer;
-    private MailService     $service;
-    private Rule            $rule;
+    /** @var MockObject&MailSubjectFormatter */
+    private MailSubjectFormatter $formatter;
+    private MailService          $service;
+    private Rule                 $rule;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->mailer  = $this->createMock(MailerInterface::class);
-        $this->service = new MailService($this->log, $this->mailer);
+        $this->mailer    = $this->createMock(MailerInterface::class);
+        $this->formatter = $this->createMock(MailSubjectFormatter::class);
+        $this->service   = new MailService($this->log, $this->mailer, $this->formatter);
 
-        $recipient        = new Recipient();
-        $recipient->email = 'recipient@example.com';
+        $recipient = new Recipient();
+        $recipient->setEmail('recipient@example.com');
 
-        $this->rule             = new Rule();
-        $this->rule->name       = "Sherlock Holmes";
-        $this->rule->recipients = new Recipients();
-        $this->rule->recipients->addRecipient($recipient);
+        $this->rule = new Rule();
+        $this->rule->setName("Sherlock Holmes");
+        $this->rule->addRecipient($recipient);
+        $this->rule->setRuleOptions((new RuleOptions())->setSubject('subject'));
     }
 
     /**
@@ -47,20 +53,22 @@ class MailServiceTest extends AbstractTest
     {
         // prep data
         $commits = [$this->createCommit(), $this->createCommit()];
+        $config  = new RuleConfiguration(new DateTime(), new DateTime(), [], $this->rule);
 
         // assert mailer send argument
+        $this->formatter->expects(self::once())->method('format')->with('subject', $this->rule, $commits)->willReturn('replaced-subject');
         $this->mailer->expects(static::once())
             ->method('send')
             ->with(
                 static::callback(
                     static fn(TemplatedEmail $email) => count($email->getTo()) > 0
                         && $email->getHtmlTemplate() === 'mail/commits.html.twig'
-                        && $email->getSubject() === '[GitCommitMail] New revisions for: Sherlock Holmes'
+                        && $email->getSubject() === 'replaced-subject'
                         && $email->getTextBody() === ''
                         && count($email->getContext()) > 0
                 )
             );
 
-        $this->service->sendCommitsMail($this->rule, $commits);
+        $this->service->sendCommitsMail($config, $commits);
     }
 }

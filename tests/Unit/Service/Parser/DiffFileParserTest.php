@@ -8,7 +8,7 @@ use DR\GitCommitNotification\Entity\Git\Diff\DiffFile;
 use DR\GitCommitNotification\Exception\ParseException;
 use DR\GitCommitNotification\Service\Parser\DiffFileParser;
 use DR\GitCommitNotification\Service\Parser\Unified\UnifiedBlockParser;
-use DR\GitCommitNotification\Tests\AbstractTest;
+use DR\GitCommitNotification\Tests\AbstractTestCase;
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -16,7 +16,7 @@ use PHPUnit\Framework\MockObject\MockObject;
  * @coversDefaultClass \DR\GitCommitNotification\Service\Parser\DiffFileParser
  * @covers ::__construct
  */
-class DiffFileParserTest extends AbstractTest
+class DiffFileParserTest extends AbstractTestCase
 {
     /** @var UnifiedBlockParser|MockObject */
     private UnifiedBlockParser $blockParser;

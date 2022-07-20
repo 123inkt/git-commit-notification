@@ -9,7 +9,7 @@ use DR\GitCommitNotification\Service\CommitHydrator;
 use DR\GitCommitNotification\Service\Git\Log\FormatPatternFactory;
 use DR\GitCommitNotification\Service\Parser\DiffParser;
 use DR\GitCommitNotification\Service\Parser\GitLogParser;
-use DR\GitCommitNotification\Tests\AbstractTest;
+use DR\GitCommitNotification\Tests\AbstractTestCase;
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -17,14 +17,14 @@ use PHPUnit\Framework\MockObject\MockObject;
  * @coversDefaultClass \DR\GitCommitNotification\Service\Parser\GitLogParser
  * @covers ::__construct
  */
-class GitLogParserTest extends AbstractTest
+class GitLogParserTest extends AbstractTestCase
 {
     private GitLogParser $parser;
-    /** @var DiffParser|MockObject */
+    /** @var DiffParser&MockObject */
     private DiffParser $diffParser;
-    /** @var CommitHydrator|MockObject */
+    /** @var CommitHydrator&MockObject */
     private CommitHydrator $hydrator;
-    /** @var FormatPatternFactory|MockObject */
+    /** @var FormatPatternFactory&MockObject */
     private FormatPatternFactory $patternFactory;
 
     protected function setUp(): void

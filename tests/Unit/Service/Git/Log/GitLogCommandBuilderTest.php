@@ -6,14 +6,14 @@ namespace DR\GitCommitNotification\Tests\Unit\Service\Git\Log;
 use DateTimeImmutable;
 use DateTimeZone;
 use DR\GitCommitNotification\Service\Git\Log\GitLogCommandBuilder;
-use DR\GitCommitNotification\Tests\AbstractTest;
+use DR\GitCommitNotification\Tests\AbstractTestCase;
 use Exception;
 
 /**
  * @coversDefaultClass \DR\GitCommitNotification\Service\Git\Log\GitLogCommandBuilder
  * @covers ::__construct
  */
-class GitLogCommandBuilderTest extends AbstractTest
+class GitLogCommandBuilderTest extends AbstractTestCase
 {
     private const DEFAULTS = [
         'git',

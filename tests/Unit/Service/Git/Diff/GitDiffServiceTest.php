@@ -11,7 +11,7 @@ use DR\GitCommitNotification\Service\Git\Diff\GitDiffCommandBuilder;
 use DR\GitCommitNotification\Service\Git\Diff\GitDiffCommandFactory;
 use DR\GitCommitNotification\Service\Git\Diff\GitDiffService;
 use DR\GitCommitNotification\Service\Parser\DiffParser;
-use DR\GitCommitNotification\Tests\AbstractTest;
+use DR\GitCommitNotification\Tests\AbstractTestCase;
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -19,13 +19,13 @@ use PHPUnit\Framework\MockObject\MockObject;
  * @coversDefaultClass \DR\GitCommitNotification\Service\Git\Diff\GitDiffService
  * @covers ::__construct
  */
-class GitDiffServiceTest extends AbstractTest
+class GitDiffServiceTest extends AbstractTestCase
 {
-    /** @var CacheableGitRepositoryService|MockObject */
+    /** @var CacheableGitRepositoryService&MockObject */
     private CacheableGitRepositoryService $repositoryService;
-    /** @var GitDiffCommandFactory|MockObject */
+    /** @var GitDiffCommandFactory&MockObject */
     private GitDiffCommandFactory $commandFactory;
-    /** @var DiffParser|MockObject */
+    /** @var DiffParser&MockObject */
     private DiffParser     $parser;
     private GitDiffService $diffService;
 
@@ -44,10 +44,10 @@ class GitDiffServiceTest extends AbstractTest
      */
     public function testGetBundledDiff(): void
     {
-        $repositoryConfig      = $this->createRepository('foobar', 'http://foobar.com');
-        $rule                  = new Rule();
-        $repository            = $this->createMock(GitRepository::class);
-        $commandBuilder        = new GitDiffCommandBuilder('git');
+        $repositoryConfig = $this->createRepository('foobar', 'http://foobar.com');
+        $rule             = new Rule();
+        $repository       = $this->createMock(GitRepository::class);
+        $commandBuilder   = new GitDiffCommandBuilder('git');
 
         $files                = [new DiffFile()];
         $commit               = $this->createCommit();

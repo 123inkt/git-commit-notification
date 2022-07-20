@@ -33,8 +33,8 @@ class ExternalLinkExtension extends AbstractExtension
     public function injectExternalLinks(string $html, array $links): string
     {
         foreach ($links as $link) {
-            $key = $link->pattern;
-            $url = $link->url;
+            $key = (string)$link->getPattern();
+            $url = (string)$link->getUrl();
 
             $search = '/' . str_replace('\{\}', '([\w.-]+)', preg_quote($key, '/')) . '/';
             $result = preg_replace_callback(

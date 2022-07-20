@@ -6,14 +6,14 @@ namespace DR\GitCommitNotification\Tests\Unit\ViewModel;
 use DigitalRevolution\AccessorPairConstraint\AccessorPairAsserter;
 use DR\GitCommitNotification\Entity\Git\Diff\DiffBlock;
 use DR\GitCommitNotification\Entity\Git\Diff\DiffLine;
-use DR\GitCommitNotification\Tests\AbstractTest;
+use DR\GitCommitNotification\Tests\AbstractTestCase;
 use DR\GitCommitNotification\ViewModel\CommitsViewModel;
 
 /**
  * @coversDefaultClass \DR\GitCommitNotification\ViewModel\CommitsViewModel
  * @covers ::__construct
  */
-class CommitsViewModelTest extends AbstractTest
+class CommitsViewModelTest extends AbstractTestCase
 {
     use AccessorPairAsserter;
 

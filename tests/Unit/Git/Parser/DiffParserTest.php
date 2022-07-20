@@ -7,14 +7,14 @@ use DR\GitCommitNotification\Entity\Git\Diff\DiffFile;
 use DR\GitCommitNotification\Exception\ParseException;
 use DR\GitCommitNotification\Service\Parser\DiffFileParser;
 use DR\GitCommitNotification\Service\Parser\DiffParser;
-use DR\GitCommitNotification\Tests\AbstractTest;
+use DR\GitCommitNotification\Tests\AbstractTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 
 /**
  * @coversDefaultClass \DR\GitCommitNotification\Service\Parser\DiffParser
  * @covers ::__construct
  */
-class DiffParserTest extends AbstractTest
+class DiffParserTest extends AbstractTestCase
 {
     private DiffParser $parser;
     /** @var DiffFileParser|MockObject */

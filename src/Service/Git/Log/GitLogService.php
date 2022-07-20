@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace DR\GitCommitNotification\Service\Git\Log;
 
-use DR\GitCommitNotification\Entity\Config\Rule;
+use DR\GitCommitNotification\Entity\Config\RuleConfiguration;
 use DR\GitCommitNotification\Entity\Git\Commit;
 use DR\GitCommitNotification\Service\Git\CacheableGitRepositoryService;
 use DR\GitCommitNotification\Service\Parser\GitLogParser;
@@ -33,20 +33,19 @@ class GitLogService
      * @return Commit[]
      * @throws Exception
      */
-    public function getCommits(Rule $rule): array
+    public function getCommits(RuleConfiguration $ruleConfig): array
     {
+        $rule   = $ruleConfig->rule;
         $result = [];
 
-        foreach ($rule->repositories->getRepositories() as $repositoryReference) {
-            $repositoryConfig = $rule->config->repositories->getByReference($repositoryReference);
-
+        foreach ($rule->getRepositories() as $repositoryConfig) {
             // clone or pull the repository for the given rule.
-            $repository = $this->repositoryService->getRepository($repositoryConfig->url);
+            $repository = $this->repositoryService->getRepository((string)$repositoryConfig->getUrl());
 
             // create command
-            $commandBuilder = $this->commandFactory->fromRule($rule);
+            $commandBuilder = $this->commandFactory->fromRule($ruleConfig);
 
-            $this->log->debug(sprintf('Executing `%s` for `%s`', $commandBuilder, $repositoryReference->name));
+            $this->log->debug(sprintf('Executing `%s` for `%s`', $commandBuilder, $repositoryConfig->getName()));
 
             // execute `git log ...` command
             $output = $repository->execute($commandBuilder);

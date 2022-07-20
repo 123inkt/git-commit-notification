@@ -5,13 +5,13 @@ namespace DR\GitCommitNotification\Tests\Unit\Entity\Config;
 
 use DateTimeImmutable;
 use DR\GitCommitNotification\Entity\Config\Frequency;
-use DR\GitCommitNotification\Tests\AbstractTest;
+use DR\GitCommitNotification\Tests\AbstractTestCase;
 use InvalidArgumentException;
 
 /**
  * @coversDefaultClass \DR\GitCommitNotification\Entity\Config\Frequency
  */
-class FrequencyTest extends AbstractTest
+class FrequencyTest extends AbstractTestCase
 {
     /**
      * @covers ::isValid

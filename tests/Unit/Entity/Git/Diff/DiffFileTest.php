@@ -4,12 +4,12 @@ declare(strict_types=1);
 namespace DR\GitCommitNotification\Tests\Unit\Entity\Git\Diff;
 
 use DR\GitCommitNotification\Entity\Git\Diff\DiffFile;
-use DR\GitCommitNotification\Tests\AbstractTest;
+use DR\GitCommitNotification\Tests\AbstractTestCase;
 
 /**
  * @coversDefaultClass \DR\GitCommitNotification\Entity\Git\Diff\DiffFile
  */
-class DiffFileTest extends AbstractTest
+class DiffFileTest extends AbstractTestCase
 {
     /**
      * @covers ::getFileMode

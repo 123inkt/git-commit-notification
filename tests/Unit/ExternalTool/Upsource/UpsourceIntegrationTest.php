@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace DR\GitCommitNotification\Tests\Unit\ExternalTool\Upsource;
 
+use DR\GitCommitNotification\Entity\Config\RepositoryProperty;
 use DR\GitCommitNotification\Entity\Git\Commit;
 use DR\GitCommitNotification\Event\CommitEvent;
 use DR\GitCommitNotification\ExternalTool\Upsource\UpsourceApi;
 use DR\GitCommitNotification\ExternalTool\Upsource\UpsourceIntegration;
-use DR\GitCommitNotification\Tests\AbstractTest;
+use DR\GitCommitNotification\Tests\AbstractTestCase;
 use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 
@@ -15,9 +16,9 @@ use PHPUnit\Framework\MockObject\MockObject;
  * @coversDefaultClass \DR\GitCommitNotification\ExternalTool\Upsource\UpsourceIntegration
  * @covers ::__construct
  */
-class UpsourceIntegrationTest extends AbstractTest
+class UpsourceIntegrationTest extends AbstractTestCase
 {
-    /** @var UpsourceApi|MockObject */
+    /** @var UpsourceApi&MockObject */
     private UpsourceApi         $api;
     private UpsourceIntegration $integration;
 
@@ -57,8 +58,7 @@ class UpsourceIntegrationTest extends AbstractTest
      */
     public function testOnCommitEventShouldSkipOnMissingUpsourceProjectId(): void
     {
-        $repository                    = $this->createRepository('upsource', 'https://git.repository.example.com/');
-        $repository->upsourceProjectId = null;
+        $repository = $this->createRepository('upsource', 'https://git.repository.example.com/');
 
         $commit             = $this->createCommit();
         $commit->repository = $repository;
@@ -76,14 +76,14 @@ class UpsourceIntegrationTest extends AbstractTest
      */
     public function testOnCommitEventShouldSkipOnNoReviewId(): void
     {
-        $repository                    = $this->createRepository('upsource', 'https://git.repository.example.com/');
-        $repository->upsourceProjectId = "foobar";
+        $repository = $this->createRepository('upsource', 'https://git.repository.example.com/');
+        $repository->addRepositoryProperty(new RepositoryProperty("upsource-project-id", "foobar"));
 
         $commit             = $this->createCommit();
         $commit->repository = $repository;
 
         // setup mock
-        $this->api->expects(static::once())->method('getReviewId')->with($repository->upsourceProjectId, $commit->getSubjectLine())->willReturn(null);
+        $this->api->expects(static::once())->method('getReviewId')->with("foobar", $commit->getSubjectLine())->willReturn(null);
 
         $this->integration->onCommitEvent(new CommitEvent($commit));
         static::assertEmpty($commit->integrationLinks);
@@ -96,7 +96,7 @@ class UpsourceIntegrationTest extends AbstractTest
     public function testOnCommitEventShouldSkipOnHttpClientException(): void
     {
         $repository                    = $this->createRepository('upsource', 'https://git.repository.example.com/');
-        $repository->upsourceProjectId = "foobar";
+        $repository->addRepositoryProperty(new RepositoryProperty("upsource-project-id", "foobar"));
 
         $commit             = $this->createCommit();
         $commit->repository = $repository;
@@ -116,7 +116,7 @@ class UpsourceIntegrationTest extends AbstractTest
     public function testOnCommitEvent(): void
     {
         $repository                    = $this->createRepository('upsource', 'https://git.repository.example.com/');
-        $repository->upsourceProjectId = "foobar";
+        $repository->addRepositoryProperty(new RepositoryProperty("upsource-project-id", "foobar"));
 
         $commit             = $this->createCommit();
         $commit->repository = $repository;
@@ -124,7 +124,7 @@ class UpsourceIntegrationTest extends AbstractTest
         // setup mock
         $this->api->expects(static::once())
             ->method('getReviewId')
-            ->with($repository->upsourceProjectId, $commit->getSubjectLine())
+            ->with("foobar", $commit->getSubjectLine())
             ->willReturn('cr-12345');
 
         $this->integration->onCommitEvent(new CommitEvent($commit));

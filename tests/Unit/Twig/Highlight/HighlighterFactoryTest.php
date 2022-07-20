@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace DR\GitCommitNotification\Tests\Unit\Twig\Highlight;
 
-use DR\GitCommitNotification\Tests\AbstractTest;
+use DR\GitCommitNotification\Tests\AbstractTestCase;
 use DR\GitCommitNotification\Twig\Highlight\HighlighterFactory;
 use DR\GitCommitNotification\Twig\Highlight\PHPHighlighter;
 use DR\GitCommitNotification\Twig\Highlight\TwigHighlighter;
@@ -11,7 +11,7 @@ use DR\GitCommitNotification\Twig\Highlight\TwigHighlighter;
 /**
  * @coversDefaultClass \DR\GitCommitNotification\Twig\Highlight\HighlighterFactory
  */
-class HighlighterFactoryTest extends AbstractTest
+class HighlighterFactoryTest extends AbstractTestCase
 {
     /**
      * @covers ::getHighlighter

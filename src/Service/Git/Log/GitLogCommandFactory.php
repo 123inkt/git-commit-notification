@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace DR\GitCommitNotification\Service\Git\Log;
 
-use DR\GitCommitNotification\Entity\Config\Rule;
+use DR\GitCommitNotification\Doctrine\Type\DiffAlgorithmType;
+use DR\GitCommitNotification\Entity\Config\RuleConfiguration;
 use DR\GitCommitNotification\Service\Git\GitCommandBuilderInterface;
 
 class GitLogCommandFactory
@@ -17,33 +18,35 @@ class GitLogCommandFactory
         $this->patternFactory = $patternFactory;
     }
 
-    public function fromRule(Rule $rule): GitCommandBuilderInterface
+    public function fromRule(RuleConfiguration $ruleConfig): GitCommandBuilderInterface
     {
+        $rule    = $ruleConfig->rule;
+        $options = $rule->getRuleOptions();
         $this->builder
             ->start()
             ->remotes()
             ->topoOrder()
             ->patch()
             ->decorate()
-            ->diffAlgorithm($rule->diffAlgorithm)
+            ->diffAlgorithm($options?->getDiffAlgorithm() ?? DiffAlgorithmType::MYERS)
             ->format($this->patternFactory->createPattern())
             ->ignoreCrAtEol()
-            ->since($rule->config->startTime)
-            ->until($rule->config->endTime);
+            ->since($ruleConfig->startTime)
+            ->until($ruleConfig->endTime);
 
-        if ($rule->excludeMergeCommits) {
+        if ($options?->isExcludeMergeCommits() === true) {
             $this->builder->noMerges();
         }
-        if ($rule->ignoreSpaceAtEol) {
+        if ($options?->isIgnoreSpaceAtEol() === true) {
             $this->builder->ignoreSpaceAtEol();
         }
-        if ($rule->ignoreSpaceChange) {
+        if ($options?->isIgnoreSpaceChange() === true) {
             $this->builder->ignoreSpaceChange();
         }
-        if ($rule->ignoreAllSpace) {
+        if ($options?->isIgnoreAllSpace() === true) {
             $this->builder->ignoreAllSpace();
         }
-        if ($rule->ignoreBlankLines) {
+        if ($options?->isIgnoreBlankLines() === true) {
             $this->builder->ignoreBlankLines();
         }
 

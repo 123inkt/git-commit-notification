@@ -7,12 +7,12 @@ use DateTime;
 use DR\GitCommitNotification\Entity\Git\Author;
 use DR\GitCommitNotification\Entity\Git\Commit;
 use DR\GitCommitNotification\Entity\Git\Diff\DiffFile;
-use DR\GitCommitNotification\Tests\AbstractTest;
+use DR\GitCommitNotification\Tests\AbstractTestCase;
 
 /**
  * @coversDefaultClass \DR\GitCommitNotification\Entity\Git\Commit
  */
-class CommitTest extends AbstractTest
+class CommitTest extends AbstractTestCase
 {
     private Commit   $commit;
     private DateTime $date;

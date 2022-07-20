@@ -11,12 +11,12 @@ use DR\GitCommitNotification\Service\Git\Diff\UnifiedDiffBundler;
 use DR\GitCommitNotification\Service\Parser\DiffFileParser;
 use DR\GitCommitNotification\Service\Parser\Unified\UnifiedBlockParser;
 use DR\GitCommitNotification\Service\Parser\Unified\UnifiedLineParser;
-use DR\GitCommitNotification\Tests\AbstractTest;
+use DR\GitCommitNotification\Tests\AbstractTestCase;
 
 /**
  * @coversNothing
  */
-class DiffFileParserTest extends AbstractTest
+class DiffFileParserTest extends AbstractTestCase
 {
     private DiffFileParser $parser;
 

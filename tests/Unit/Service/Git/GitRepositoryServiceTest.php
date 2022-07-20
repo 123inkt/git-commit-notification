@@ -9,7 +9,7 @@ use CzProject\GitPhp\GitRepository;
 use CzProject\GitPhp\RunnerResult;
 use DR\GitCommitNotification\Exception\RepositoryException;
 use DR\GitCommitNotification\Service\Git\GitRepositoryService;
-use DR\GitCommitNotification\Tests\AbstractTest;
+use DR\GitCommitNotification\Tests\AbstractTestCase;
 use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -17,7 +17,7 @@ use Symfony\Component\Filesystem\Filesystem;
  * @coversDefaultClass \DR\GitCommitNotification\Service\Git\GitRepositoryService
  * @covers ::__construct
  */
-class GitRepositoryServiceTest extends AbstractTest
+class GitRepositoryServiceTest extends AbstractTestCase
 {
     private const CACHE_DIRECTORY = "/cache/directory";
 

@@ -4,13 +4,13 @@ declare(strict_types=1);
 namespace DR\GitCommitNotification\Tests\Unit\Service\Git\Diff;
 
 use DR\GitCommitNotification\Service\Git\Diff\GitDiffCommandBuilder;
-use DR\GitCommitNotification\Tests\AbstractTest;
+use DR\GitCommitNotification\Tests\AbstractTestCase;
 
 /**
  * @coversDefaultClass \DR\GitCommitNotification\Service\Git\Diff\GitDiffCommandBuilder
  * @covers ::__construct
  */
-class GitDiffCommandBuilderTest extends AbstractTest
+class GitDiffCommandBuilderTest extends AbstractTestCase
 {
     private const DEFAULTS = [
         'git',

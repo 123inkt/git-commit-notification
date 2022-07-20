@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace DR\GitCommitNotification\Service;
 
+use DR\GitCommitNotification\Entity\Config\Filter;
 use DR\GitCommitNotification\Entity\Config\Rule;
+use DR\GitCommitNotification\Entity\Config\RuleConfiguration;
 use DR\GitCommitNotification\Entity\Git\Commit;
 use DR\GitCommitNotification\Event\CommitEvent;
 use DR\GitCommitNotification\Service\Filter\CommitFilter;
@@ -46,22 +48,22 @@ class RuleProcessor
     /**
      * @throws Throwable
      */
-    public function processRule(Rule $rule): void
+    public function processRule(RuleConfiguration $ruleConfig): void
     {
-        $this->logger->info(sprintf('Executing rule `%s`.', $rule->name));
+        $this->logger->info(sprintf('Executing rule `%s`.', $ruleConfig->rule->getName()));
 
-        $commits = $this->gitLogService->getCommits($rule);
+        $commits = $this->gitLogService->getCommits($ruleConfig);
 
         // bundle similar commits
         $commits = $this->bundler->bundle($commits);
 
         // Fetch the single diff for commits with multiple commit hashes
         foreach ($commits as $commit) {
-            $this->diffService->getBundledDiff($rule, $commit);
+            $this->diffService->getBundledDiff($ruleConfig->rule, $commit);
         }
 
         // include or exclude certain commits
-        $commits = $this->filter($rule, $commits);
+        $commits = $this->filter($ruleConfig->rule, $commits);
 
         if (count($commits) === 0) {
             $this->logger->info('Found 0 new commits, ending...');
@@ -75,7 +77,7 @@ class RuleProcessor
         }
 
         // send mail
-        $this->mailService->sendCommitsMail($rule, $commits);
+        $this->mailService->sendCommitsMail($ruleConfig, $commits);
     }
 
     /**
@@ -86,13 +88,15 @@ class RuleProcessor
     private function filter(Rule $rule, array $commits): array
     {
         // exclude certain commits
-        if ($rule->exclude !== null) {
-            $commits = $this->filter->exclude($commits, $rule->exclude);
+        $exclusions = $rule->getFilters()->filter(static fn(Filter $filter) => $filter->isInclusion() === false);
+        if (count($exclusions) > 0) {
+            $commits = $this->filter->exclude($commits, $exclusions);
         }
 
         // include certain commits
-        if ($rule->include !== null) {
-            $commits = $this->filter->include($commits, $rule->include);
+        $inclusions = $rule->getFilters()->filter(static fn(Filter $filter) => (bool)$filter->isInclusion());
+        if (count($inclusions) > 0) {
+            $commits = $this->filter->include($commits, $inclusions);
         }
 
         return $commits;

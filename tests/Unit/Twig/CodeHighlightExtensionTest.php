@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace DR\GitCommitNotification\Tests\Unit\Twig;
 
-use DR\GitCommitNotification\Tests\AbstractTest;
+use DR\GitCommitNotification\Tests\AbstractTestCase;
 use DR\GitCommitNotification\Twig\CodeHighlightExtension;
 use DR\GitCommitNotification\Twig\Highlight\HighlighterFactory;
 use DR\GitCommitNotification\Twig\Highlight\HighlighterInterface;
@@ -12,7 +12,7 @@ use DR\GitCommitNotification\Twig\Highlight\HighlighterInterface;
  * @coversDefaultClass \DR\GitCommitNotification\Twig\CodeHighlightExtension
  * @covers ::__construct
  */
-class CodeHighlightExtensionTest extends AbstractTest
+class CodeHighlightExtensionTest extends AbstractTestCase
 {
     /**
      * @covers ::getFilters

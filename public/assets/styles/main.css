@@ -1,0 +1,33 @@
+.header-nav-brand {
+    border: 1px solid #ffffff;
+    border-radius: 5px;
+    height: 30px;
+    line-height: 28px;
+    margin-left: 20px;
+    margin-right: 3px;
+    padding: 0;
+    text-align: center;
+    width: 30px;
+}
+
+.content-layout-center {
+    max-width: 1000px;
+    margin: 20px auto;
+}
+
+.form-text {
+    display: none;
+}
+
+.form-control:required,
+.form-select {
+    border-left: 4px solid #dc3545;
+}
+
+.rule-table .rule-table-options {
+    width: 110px;
+}
+
+.repository-columns > * {
+    column-count: 6;
+}
